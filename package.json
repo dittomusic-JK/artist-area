@@ -1,6 +1,6 @@
 {
   "name": "ditto-artists",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Ditto Music Artist Management Dashboard - Vue 3",
   "scripts": {
