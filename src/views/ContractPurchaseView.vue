@@ -136,69 +136,105 @@
 
       <!-- Step 2: Artist Details -->
       <div v-if="currentStep === 1" class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Artist / Band Information</h2>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-xl font-semibold text-gray-900">Artist / Band Information</h2>
+          <span class="text-sm text-gray-500">{{ formData.artists.length }}/5 artists</span>
+        </div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-xs text-gray-500 mb-1">Artist / Band Name *</label>
-            <input 
-              v-model="formData.artist.name"
-              type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
-              placeholder="Artist name"
-            />
-          </div>
+        <!-- Artist Cards -->
+        <div 
+          v-for="(artist, index) in formData.artists" 
+          :key="index"
+          class="relative border border-gray-200 rounded-xl p-5 mb-4"
+        >
+          <!-- Remove button (only if more than 1 artist) -->
+          <button
+            v-if="formData.artists.length > 1"
+            @click="removeArtist(index)"
+            class="absolute top-3 right-3 p-1 text-gray-400 hover:text-error transition-colors"
+            title="Remove artist"
+          >
+            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
           
-          <div>
-            <label class="block text-xs text-gray-500 mb-1">Email *</label>
-            <input 
-              v-model="formData.artist.email"
-              type="email"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
-              placeholder="artist@email.com"
-            />
-          </div>
+          <h3 class="text-sm font-medium text-gray-700 mb-4">Artist {{ index + 1 }}</h3>
           
-          <div class="md:col-span-2">
-            <label class="block text-xs text-gray-500 mb-1">Address *</label>
-            <input 
-              v-model="formData.artist.address"
-              type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
-              placeholder="Street address"
-            />
-          </div>
-          
-          <div>
-            <label class="block text-xs text-gray-500 mb-1">City *</label>
-            <input 
-              v-model="formData.artist.city"
-              type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
-              placeholder="City"
-            />
-          </div>
-          
-          <div>
-            <label class="block text-xs text-gray-500 mb-1">Country *</label>
-            <input 
-              v-model="formData.artist.country"
-              type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
-              placeholder="Country"
-            />
-          </div>
-          
-          <div>
-            <label class="block text-xs text-gray-500 mb-1">Postcode *</label>
-            <input 
-              v-model="formData.artist.postcode"
-              type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
-              placeholder="Postcode"
-            />
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">Artist / Band Name *</label>
+              <input 
+                v-model="artist.name"
+                type="text"
+                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                placeholder="Artist name"
+              />
+            </div>
+            
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">Email *</label>
+              <input 
+                v-model="artist.email"
+                type="email"
+                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                placeholder="artist@email.com"
+              />
+            </div>
+            
+            <div class="md:col-span-2">
+              <label class="block text-xs text-gray-500 mb-1">Address *</label>
+              <input 
+                v-model="artist.address"
+                type="text"
+                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                placeholder="Street address"
+              />
+            </div>
+            
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">City *</label>
+              <input 
+                v-model="artist.city"
+                type="text"
+                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                placeholder="City"
+              />
+            </div>
+            
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">Country *</label>
+              <input 
+                v-model="artist.country"
+                type="text"
+                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                placeholder="Country"
+              />
+            </div>
+            
+            <div>
+              <label class="block text-xs text-gray-500 mb-1">Postcode *</label>
+              <input 
+                v-model="artist.postcode"
+                type="text"
+                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                placeholder="Postcode"
+              />
+            </div>
           </div>
         </div>
+        
+        <!-- Add Artist Button -->
+        <button
+          v-if="formData.artists.length < 5"
+          @click="addArtist"
+          class="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-sm font-medium text-gray-500 hover:border-ditto-purple hover:text-ditto-purple transition-colors flex items-center justify-center gap-2"
+        >
+          <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          Add Another Artist
+        </button>
       </div>
 
       <!-- Step 3: Contract Terms -->
@@ -304,8 +340,8 @@
               <p class="font-medium text-gray-900">{{ formData.recordLabel.name || '—' }}</p>
             </div>
             <div>
-              <p class="text-gray-500">Artist / Band</p>
-              <p class="font-medium text-gray-900">{{ formData.artist.name || '—' }}</p>
+              <p class="text-gray-500">Artist(s)</p>
+              <p class="font-medium text-gray-900">{{ artistNames || '—' }}</p>
             </div>
             <div>
               <p class="text-gray-500">Effective Date</p>
@@ -437,7 +473,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import type { AvailableContract, Artist } from '../types'
 
 const props = defineProps<{
@@ -462,6 +498,24 @@ const steps = [
 
 const today = new Date().toISOString().split('T')[0]
 
+interface ArtistEntry {
+  name: string
+  email: string
+  address: string
+  city: string
+  country: string
+  postcode: string
+}
+
+const createEmptyArtist = (): ArtistEntry => ({
+  name: '',
+  email: '',
+  address: '',
+  city: '',
+  country: '',
+  postcode: ''
+})
+
 const formData = reactive({
   recordLabel: {
     name: '',
@@ -472,14 +526,7 @@ const formData = reactive({
     postcode: '',
     phone: ''
   },
-  artist: {
-    name: '',
-    email: '',
-    address: '',
-    city: '',
-    country: '',
-    postcode: ''
-  },
+  artists: [createEmptyArtist()] as ArtistEntry[],
   terms: {
     effectiveDate: today,
     term: '',
@@ -500,10 +547,29 @@ const formData = reactive({
   }
 })
 
+const artistNames = computed(() => {
+  return formData.artists
+    .map(a => a.name)
+    .filter(name => name.trim())
+    .join(', ')
+})
+
+const addArtist = () => {
+  if (formData.artists.length < 5) {
+    formData.artists.push(createEmptyArtist())
+  }
+}
+
+const removeArtist = (index: number) => {
+  if (formData.artists.length > 1) {
+    formData.artists.splice(index, 1)
+  }
+}
+
 onMounted(() => {
   // Prepopulate artist info if available
   if (props.artist) {
-    formData.artist.name = props.artist.name
+    formData.artists[0].name = props.artist.name
     formData.signatures.artistSignatory = props.artist.name
     formData.signatures.artistTitle = 'Artist'
   }
