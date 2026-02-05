@@ -54,21 +54,17 @@
     </div>
     
     <!-- Right side actions -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-1">
       <button class="px-4 py-1.5 bg-success text-gray-900 text-sm font-medium rounded-full hover:opacity-90 transition-opacity">
         Upgrade
       </button>
       
       <button :class="['w-9 h-9 flex items-center justify-center rounded-full transition-colors', isDarkMode ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100']">
-        <IconHelp class="w-5 h-5" />
+        <img src="/images/support.svg" alt="Support" class="w-5 h-5" :class="{ 'invert': isDarkMode }" />
       </button>
       
       <button :class="['w-9 h-9 flex items-center justify-center rounded-full transition-colors', isDarkMode ? 'text-gray-400 hover:text-white hover:bg-gray-800' : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100']">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 01-8 0"/>
-        </svg>
+        <img src="/images/basket.svg" alt="Basket" class="w-5 h-5" :class="{ 'invert': isDarkMode }" />
       </button>
       
       <!-- Theme Toggle -->
@@ -96,9 +92,7 @@
       </button>
       
       <button class="px-4 py-1.5 bg-ditto-purple text-white text-sm font-medium rounded-full flex items-center gap-2 hover:opacity-90 transition-opacity shadow-md shadow-ditto-purple/25">
-        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 11-.99-3.467l2.31-.66a2.25 2.25 0 001.632-2.163zm0 0V2.25L9 5.25v10.303m0 0v3.75a2.25 2.25 0 01-1.632 2.163l-1.32.377a1.803 1.803 0 01-.99-3.467l2.31-.66A2.25 2.25 0 009 15.553z" />
-        </svg>
+        <img src="/images/create.svg" alt="" class="w-4 h-4 brightness-0 invert" />
         Create
       </button>
       
@@ -111,8 +105,6 @@
 </template>
 
 <script setup lang="ts">
-import { IconHelp } from '../icons'
-
 defineProps<{
   isDarkMode: boolean
 }>()
