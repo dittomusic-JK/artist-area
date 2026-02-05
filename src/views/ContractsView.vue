@@ -74,15 +74,62 @@
               <span class="text-sm text-gray-500">{{ contract.dateCreated }}</span>
             </div>
             
-            <!-- Actions -->
-            <div class="lg:col-span-2 flex items-center">
-              <button 
-                v-if="contract.canResend"
-                class="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-full text-sm text-gray-600 hover:border-ditto-purple hover:text-ditto-purple transition-colors"
-              >
-                <IconMail class="w-4 h-4" />
-                Resend to Email
-              </button>
+            <!-- Actions Dropdown -->
+            <div class="lg:col-span-2 flex items-center relative">
+              <div class="relative">
+                <button 
+                  @click="toggleActionsMenu(contract.id)"
+                  class="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-full text-sm text-gray-600 hover:border-ditto-purple hover:text-ditto-purple transition-colors"
+                >
+                  Actions
+                  <IconChevronDown class="w-4 h-4" :class="{ 'rotate-180': openMenuId === contract.id }" />
+                </button>
+                
+                <!-- Dropdown Menu -->
+                <div 
+                  v-if="openMenuId === contract.id"
+                  class="absolute right-0 top-full mt-1 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-20 py-1"
+                >
+                  <!-- Edit - only for Draft -->
+                  <button
+                    v-if="contract.status === 'Draft'"
+                    @click="handleEdit(contract)"
+                    class="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                  >
+                    <IconEdit class="w-4 h-4" />
+                    Edit
+                  </button>
+                  
+                  <!-- Resend to Email - for Ready status -->
+                  <button
+                    v-if="contract.status === 'Ready'"
+                    @click="handleResend(contract)"
+                    class="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                  >
+                    <IconMail class="w-4 h-4" />
+                    Resend to Email
+                  </button>
+                  
+                  <!-- View - for all statuses -->
+                  <button
+                    @click="handleView(contract)"
+                    class="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                  >
+                    <IconEye class="w-4 h-4" />
+                    View
+                  </button>
+                  
+                  <!-- Delete - only for Draft -->
+                  <button
+                    v-if="contract.status === 'Draft'"
+                    @click="handleDelete(contract)"
+                    class="w-full px-3 py-2 text-sm text-left text-error hover:bg-red-50 flex items-center gap-2"
+                  >
+                    <IconTrash class="w-4 h-4" />
+                    Delete
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -97,9 +144,19 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue'
 import type { AvailableContract, UserContract, ContractStatus } from '../types'
 import ContractTypeCard from '../components/common/ContractTypeCard.vue'
-import { IconMail } from '../components/icons'
+import { IconMail, IconChevronDown, IconEdit } from '../components/icons'
+
+// Simple icon components for actions
+const IconEye = {
+  template: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.64 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.64 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`
+}
+
+const IconTrash = {
+  template: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>`
+}
 
 defineProps<{
   availableContracts: AvailableContract[]
@@ -109,11 +166,61 @@ defineProps<{
 
 const emit = defineEmits<{
   (e: 'select-contract', contract: AvailableContract): void
+  (e: 'edit-contract', contract: UserContract): void
+  (e: 'delete-contract', contract: UserContract): void
+  (e: 'view-contract', contract: UserContract): void
+  (e: 'resend-contract', contract: UserContract): void
 }>()
+
+const openMenuId = ref<string | null>(null)
+
+const toggleActionsMenu = (contractId: string) => {
+  openMenuId.value = openMenuId.value === contractId ? null : contractId
+}
+
+const closeMenu = () => {
+  openMenuId.value = null
+}
 
 const handleContractSelect = (contract: AvailableContract) => {
   emit('select-contract', contract)
 }
+
+const handleEdit = (contract: UserContract) => {
+  emit('edit-contract', contract)
+  closeMenu()
+}
+
+const handleDelete = (contract: UserContract) => {
+  emit('delete-contract', contract)
+  closeMenu()
+}
+
+const handleView = (contract: UserContract) => {
+  emit('view-contract', contract)
+  closeMenu()
+}
+
+const handleResend = (contract: UserContract) => {
+  emit('resend-contract', contract)
+  closeMenu()
+}
+
+// Close menu when clicking outside
+const handleClickOutside = (event: MouseEvent) => {
+  const target = event.target as HTMLElement
+  if (!target.closest('.relative')) {
+    closeMenu()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 
 const getStatusClass = (status: ContractStatus): string => {
   switch (status) {
@@ -122,7 +229,11 @@ const getStatusClass = (status: ContractStatus): string => {
     case 'Processing':
       return 'bg-warning/20 text-warning'
     case 'Draft':
-      return 'bg-ditto-light-grey text-ditto-subtext'
+      return 'bg-gray-100 text-gray-600'
+    case 'Ended':
+      return 'bg-blue-100 text-blue-600'
+    case 'Removed':
+      return 'bg-red-100 text-error'
     default:
       return 'bg-ditto-light-grey text-ditto-subtext'
   }

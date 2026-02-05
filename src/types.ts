@@ -102,7 +102,7 @@ export type ContractType =
   | 'collaborator-splits'
   | 'merchandising'
 
-export type ContractStatus = 'Ready' | 'Processing' | 'Draft'
+export type ContractStatus = 'Draft' | 'Processing' | 'Ready' | 'Ended' | 'Removed'
 
 export interface AvailableContract {
   id: ContractType

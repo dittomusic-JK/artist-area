@@ -386,6 +386,13 @@ export const availableContracts: AvailableContract[] = [
 // User Contracts
 export const userContracts: UserContract[] = [
   {
+    id: '1045',
+    name: '#1045 Band Partnership Agreement',
+    status: 'Draft',
+    dateCreated: '20th May 2025',
+    canResend: false
+  },
+  {
     id: '1041',
     name: '#1041 Licensing agreement for Sample',
     status: 'Ready',
@@ -407,10 +414,17 @@ export const userContracts: UserContract[] = [
     canResend: true
   },
   {
-    id: '1044-3',
-    name: '#1044 Hire Musician Contract',
-    status: 'Ready',
-    dateCreated: '21st April 2025',
-    canResend: true
+    id: '1040',
+    name: '#1040 Distribution Agreement',
+    status: 'Ended',
+    dateCreated: '15th March 2025',
+    canResend: false
+  },
+  {
+    id: '1039',
+    name: '#1039 Collaborator Splits',
+    status: 'Removed',
+    dateCreated: '1st Feb 2025',
+    canResend: false
   }
 ]
