@@ -1,6 +1,6 @@
 <template>
   <div :class="[
-    'flex items-center gap-3 p-4 rounded-xl border transition-all duration-200 hover:shadow-md',
+    'relative flex items-center gap-3 p-4 rounded-xl border transition-all duration-200 hover:shadow-md',
     isDarkMode 
       ? 'bg-[#141414] border-gray-700/50 hover:border-gray-600' 
       : 'bg-white border-gray-200 hover:border-gray-300 shadow-sm'
@@ -25,6 +25,19 @@
     >
       <IconCopy class="w-5 h-5" />
     </button>
+    
+    <!-- Toast Notification -->
+    <Transition name="toast">
+      <div 
+        v-if="copied"
+        class="absolute -top-10 left-1/2 -translate-x-1/2 px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-lg shadow-lg flex items-center gap-1.5"
+      >
+        <svg class="w-3.5 h-3.5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+        </svg>
+        Copied to clipboard
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -66,3 +79,20 @@ const copyToClipboard = async () => {
   }
 }
 </script>
+
+<style scoped>
+.toast-enter-active {
+  transition: all 0.2s ease-out;
+}
+.toast-leave-active {
+  transition: all 0.15s ease-in;
+}
+.toast-enter-from {
+  opacity: 0;
+  transform: translate(-50%, 8px);
+}
+.toast-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -4px);
+}
+</style>

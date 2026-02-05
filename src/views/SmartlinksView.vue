@@ -2,7 +2,7 @@
   <div class="p-6 lg:p-8">
     <!-- Header -->
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
-      <h1 class="text-2xl lg:text-3xl font-bold text-gray-900">Smartlinks</h1>
+      <h1 :class="['text-2xl lg:text-3xl font-bold', isDarkMode ? 'text-white' : 'text-gray-900']">Smartlinks</h1>
       
       <div class="flex items-center gap-3">
         <SearchInput 
@@ -11,17 +11,26 @@
           class="lg:w-64"
           :is-dark-mode="isDarkMode"
         />
-        <button class="px-4 py-2.5 flex items-center gap-2 border border-gray-300 rounded-lg hover:border-ditto-purple transition-colors text-gray-700">
-          <IconFilter class="w-5 h-5 text-gray-500" />
+        <button :class="[
+          'px-4 py-2.5 flex items-center gap-2 border rounded-lg transition-colors',
+          isDarkMode ? 'border-gray-600 text-white hover:border-ditto-purple' : 'border-gray-300 text-gray-700 hover:border-ditto-purple'
+        ]">
+          <IconFilter :class="['w-5 h-5', isDarkMode ? 'text-gray-400' : 'text-gray-500']" />
           <span class="text-sm font-medium">Filters</span>
         </button>
       </div>
     </div>
     
     <!-- Table -->
-    <div class="bg-white rounded-xl overflow-hidden">
+    <div :class="[
+      'rounded-xl overflow-hidden',
+      isDarkMode ? 'bg-[#141414]' : 'bg-white'
+    ]">
       <!-- Table Header -->
-      <div class="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+      <div :class="[
+        'hidden lg:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-medium uppercase tracking-wider',
+        isDarkMode ? 'bg-[#0F0E0E] text-gray-500' : 'bg-gray-50 text-gray-500'
+      ]">
         <div class="col-span-4">Details</div>
         <div class="col-span-2">Status</div>
         <div class="col-span-2">Release Date</div>
@@ -30,11 +39,14 @@
       </div>
       
       <!-- Table Body -->
-      <div class="divide-y divide-gray-100">
+      <div :class="['divide-y', isDarkMode ? 'divide-gray-700/30' : 'divide-gray-100']">
         <div 
           v-for="smartlink in filteredSmartlinks" 
           :key="smartlink.id"
-          class="grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-4 px-4 lg:px-6 py-4 hover:bg-gray-50 transition-colors"
+          :class="[
+            'grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-4 px-4 lg:px-6 py-4 transition-colors',
+            isDarkMode ? 'hover:bg-[#0F0E0E]/50' : 'hover:bg-gray-50'
+          ]"
         >
           <!-- Details -->
           <div class="lg:col-span-4 flex items-center gap-3">
@@ -54,48 +66,48 @@
               </span>
             </div>
             <div class="min-w-0">
-              <p class="font-medium text-gray-900 truncate">{{ smartlink.title }}</p>
+              <p :class="['font-medium truncate', isDarkMode ? 'text-white' : 'text-gray-900']">{{ smartlink.title }}</p>
               <p class="text-xs text-ditto-purple">by {{ smartlink.artist }}</p>
-              <p class="text-xs text-gray-400 truncate">{{ smartlink.url }}</p>
+              <p :class="['text-xs truncate', isDarkMode ? 'text-gray-500' : 'text-gray-400']">{{ smartlink.url }}</p>
             </div>
           </div>
           
           <!-- Status (Mobile shows inline) -->
           <div class="lg:col-span-2 flex items-center">
             <span class="w-3 h-3 rounded-full bg-success mr-2"></span>
-            <span class="text-sm text-gray-500 lg:hidden">Active</span>
+            <span :class="['text-sm lg:hidden', isDarkMode ? 'text-gray-400' : 'text-gray-500']">Active</span>
           </div>
           
           <!-- Release Date -->
           <div class="lg:col-span-2 flex items-center">
-            <span class="text-sm text-gray-500">{{ smartlink.releaseDate }}</span>
+            <span :class="['text-sm', isDarkMode ? 'text-gray-400' : 'text-gray-500']">{{ smartlink.releaseDate }}</span>
           </div>
           
           <!-- Clicks -->
           <div class="lg:col-span-2 flex items-center">
-            <span class="text-sm font-medium text-gray-900">{{ formatNumber(smartlink.clicks) }}</span>
+            <span :class="['text-sm font-medium', isDarkMode ? 'text-white' : 'text-gray-900']">{{ formatNumber(smartlink.clicks) }}</span>
           </div>
           
           <!-- Actions -->
           <div class="lg:col-span-2 flex items-center justify-end gap-2">
             <button 
-              class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              :class="['p-2 rounded-lg transition-colors', isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100']"
               title="View Analytics"
             >
-              <img src="/images/analytics.svg" alt="Analytics" class="w-5 h-5" />
+              <img src="/images/analytics.svg" alt="Analytics" class="w-5 h-5" :class="{ 'invert': isDarkMode }" />
             </button>
             <button 
-              class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              :class="['p-2 rounded-lg transition-colors', isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100']"
               title="Edit"
             >
-              <img src="/images/edit.svg" alt="Edit" class="w-5 h-5" />
+              <img src="/images/edit.svg" alt="Edit" class="w-5 h-5" :class="{ 'invert': isDarkMode }" />
             </button>
             <button 
               @click="copyLink(smartlink.url)"
-              class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              :class="['p-2 rounded-lg transition-colors', isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100']"
               title="Copy Link"
             >
-              <img src="/images/link-alt (1) 1.svg" alt="Copy Link" class="w-5 h-5" />
+              <img src="/images/link-alt (1) 1.svg" alt="Copy Link" class="w-5 h-5" :class="{ 'invert': isDarkMode }" />
             </button>
           </div>
         </div>

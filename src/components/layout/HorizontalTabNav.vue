@@ -8,7 +8,9 @@
         'px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-200',
         activeView === tab.id 
           ? 'bg-ditto-purple text-white shadow-md shadow-ditto-purple/25' 
-          : 'bg-white text-gray-600 border border-gray-200 hover:border-ditto-purple hover:text-ditto-purple'
+          : isDarkMode 
+            ? 'bg-[#141414] text-gray-400 border border-gray-700 hover:border-ditto-purple hover:text-ditto-purple'
+            : 'bg-white text-gray-600 border border-gray-200 hover:border-ditto-purple hover:text-ditto-purple'
       ]"
     >
       {{ tab.label }}
@@ -21,6 +23,7 @@ import type { ArtistViewType } from '../../types'
 
 defineProps<{
   activeView: ArtistViewType
+  isDarkMode?: boolean
 }>()
 
 defineEmits<{

@@ -15,6 +15,7 @@
       <ArtistListSidebar 
         :artists="artists"
         :selected-artist="selectedArtist"
+        :is-dark-mode="isDarkMode"
         @select="selectArtist"
         @add="handleAddArtist"
         class="hidden lg:flex"
@@ -25,11 +26,11 @@
         <!-- No Artist Selected State -->
         <div v-if="!selectedArtist" class="p-8">
           <div class="max-w-2xl mx-auto text-center py-20">
-            <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gray-100 dark:bg-[#141414] flex items-center justify-center">
+            <div :class="['w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center', isDarkMode ? 'bg-[#141414]' : 'bg-gray-100']">
               <IconPlus class="w-10 h-10 text-gray-400" />
             </div>
-            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-2">Select an Artist</h2>
-            <p class="text-gray-500 dark:text-gray-400 mb-6">Choose an artist from the sidebar or add a new one to get started.</p>
+            <h2 :class="['text-2xl font-semibold mb-2', isDarkMode ? 'text-white' : 'text-gray-900']">Select an Artist</h2>
+            <p :class="['mb-6', isDarkMode ? 'text-gray-400' : 'text-gray-500']">Choose an artist from the sidebar or add a new one to get started.</p>
             <button 
               @click="handleAddArtist"
               class="px-6 py-3 bg-ditto-purple text-white font-medium rounded-full hover:opacity-90 transition-opacity shadow-lg shadow-ditto-purple/25"
@@ -45,6 +46,7 @@
           <div :class="['sticky top-0 z-10 px-6 lg:px-8 py-4 border-b', isDarkMode ? 'bg-[#0F0E0E] border-gray-800' : 'bg-white border-gray-200']">
             <HorizontalTabNav 
               :active-view="activeView"
+              :is-dark-mode="isDarkMode"
               @navigate="setActiveView"
             />
           </div>
@@ -104,10 +106,11 @@
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
       @click.self="showEditModal = false"
     >
-      <div class="bg-white rounded-2xl max-w-5xl w-[90vw] max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div :class="['rounded-2xl max-w-5xl w-[90vw] max-h-[90vh] overflow-y-auto shadow-2xl', isDarkMode ? 'bg-[#141414]' : 'bg-white']">
         <EditArtistView 
           :artist="isAddingNewArtist ? undefined : selectedArtist!"
           :is-new="isAddingNewArtist"
+          :is-dark-mode="isDarkMode"
           @cancel="showEditModal = false"
           @save="handleSaveArtist"
         />
@@ -120,10 +123,11 @@
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
       @click.self="showContractModal = false"
     >
-      <div class="bg-white rounded-2xl max-w-4xl w-[90vw] max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div :class="['rounded-2xl max-w-4xl w-[90vw] max-h-[90vh] overflow-y-auto shadow-2xl', isDarkMode ? 'bg-[#141414]' : 'bg-white']">
         <ContractPurchaseView 
           :contract="selectedContract"
           :artist="selectedArtist ?? undefined"
+          :is-dark-mode="isDarkMode"
           @back="showContractModal = false"
           @submit="handleContractSubmit"
         />

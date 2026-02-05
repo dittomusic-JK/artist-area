@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Step Navigation Bar - Release Builder Style -->
-    <div class="border-b border-gray-200 px-6 lg:px-8 py-4">
+    <div :class="['border-b px-6 lg:px-8 py-4', isDarkMode ? 'border-gray-700' : 'border-gray-200']">
       <div class="flex items-center">
         <div 
           v-for="(step, index) in steps" 
@@ -21,14 +21,14 @@
               :class="[
                 'text-lg font-semibold',
                 index < currentStep ? 'text-ditto-purple' : 
-                index === currentStep ? 'text-ditto-purple' : 'text-gray-300'
+                index === currentStep ? 'text-ditto-purple' : isDarkMode ? 'text-gray-600' : 'text-gray-300'
               ]"
             >
               {{ index + 1 }}
             </span>
             <span 
               :class="[
-                index < currentStep ? 'text-gray-900' : 
+                index < currentStep ? (isDarkMode ? 'text-white' : 'text-gray-900') : 
                 index === currentStep ? 'text-ditto-purple' : 'text-gray-400'
               ]"
             >
@@ -51,83 +51,83 @@
     <div class="p-6 lg:p-8">
       <!-- Header -->
       <div class="mb-8">
-        <h1 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-2">{{ contract.title }}</h1>
-        <p class="text-gray-500">{{ contract.description }}</p>
+        <h1 :class="['text-2xl lg:text-3xl font-bold mb-2', isDarkMode ? 'text-white' : 'text-gray-900']">{{ contract.title }}</h1>
+        <p :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">{{ contract.description }}</p>
       </div>
 
     <!-- Step Content -->
     <div class="mb-6">
       <!-- Step 1: Record Label Details -->
       <div v-if="currentStep === 0" class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Record Label Information</h2>
+        <h2 :class="['text-xl font-semibold mb-4', isDarkMode ? 'text-white' : 'text-gray-900']">Record Label Information</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Record Label Name *</label>
+            <label :class="labelClass">Record Label Name *</label>
             <input 
               v-model="formData.recordLabel.name"
               type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
               placeholder="Enter label name"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Email *</label>
+            <label :class="labelClass">Email *</label>
             <input 
               v-model="formData.recordLabel.email"
               type="email"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
               placeholder="label@email.com"
             />
           </div>
           
           <div class="md:col-span-2">
-            <label class="block text-xs text-gray-500 mb-1">Address *</label>
+            <label :class="labelClass">Address *</label>
             <input 
               v-model="formData.recordLabel.address"
               type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
               placeholder="Street address"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">City *</label>
+            <label :class="labelClass">City *</label>
             <input 
               v-model="formData.recordLabel.city"
               type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
               placeholder="City"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Country *</label>
+            <label :class="labelClass">Country *</label>
             <input 
               v-model="formData.recordLabel.country"
               type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
               placeholder="Country"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Postcode *</label>
+            <label :class="labelClass">Postcode *</label>
             <input 
               v-model="formData.recordLabel.postcode"
               type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
               placeholder="Postcode"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Phone Number</label>
+            <label :class="labelClass">Phone Number</label>
             <input 
               v-model="formData.recordLabel.phone"
               type="tel"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
               placeholder="+44 123 456 7890"
             />
           </div>
@@ -137,15 +137,15 @@
       <!-- Step 2: Artist Details -->
       <div v-if="currentStep === 1" class="space-y-6">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-xl font-semibold text-gray-900">Artist / Band Information</h2>
-          <span class="text-sm text-gray-500">{{ formData.artists.length }}/5 artists</span>
+          <h2 :class="['text-xl font-semibold', isDarkMode ? 'text-white' : 'text-gray-900']">Artist / Band Information</h2>
+          <span :class="['text-sm', isDarkMode ? 'text-gray-400' : 'text-gray-500']">{{ formData.artists.length }}/5 artists</span>
         </div>
         
         <!-- Artist Cards -->
         <div 
           v-for="(artist, index) in formData.artists" 
           :key="index"
-          class="relative border border-gray-200 rounded-xl p-5 mb-4"
+          :class="['relative border rounded-xl p-5 mb-4', isDarkMode ? 'border-gray-700' : 'border-gray-200']"
         >
           <!-- Remove button (only if more than 1 artist) -->
           <button
@@ -159,65 +159,65 @@
             </svg>
           </button>
           
-          <h3 class="text-sm font-medium text-gray-700 mb-4">Artist {{ index + 1 }}</h3>
+          <h3 :class="['text-sm font-medium mb-4', isDarkMode ? 'text-gray-300' : 'text-gray-700']">Artist {{ index + 1 }}</h3>
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-xs text-gray-500 mb-1">Artist / Band Name *</label>
+              <label :class="labelClass">Artist / Band Name *</label>
               <input 
                 v-model="artist.name"
                 type="text"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="Artist name"
               />
             </div>
             
             <div>
-              <label class="block text-xs text-gray-500 mb-1">Email *</label>
+              <label :class="labelClass">Email *</label>
               <input 
                 v-model="artist.email"
                 type="email"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="artist@email.com"
               />
             </div>
             
             <div class="md:col-span-2">
-              <label class="block text-xs text-gray-500 mb-1">Address *</label>
+              <label :class="labelClass">Address *</label>
               <input 
                 v-model="artist.address"
                 type="text"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="Street address"
               />
             </div>
             
             <div>
-              <label class="block text-xs text-gray-500 mb-1">City *</label>
+              <label :class="labelClass">City *</label>
               <input 
                 v-model="artist.city"
                 type="text"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="City"
               />
             </div>
             
             <div>
-              <label class="block text-xs text-gray-500 mb-1">Country *</label>
+              <label :class="labelClass">Country *</label>
               <input 
                 v-model="artist.country"
                 type="text"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="Country"
               />
             </div>
             
             <div>
-              <label class="block text-xs text-gray-500 mb-1">Postcode *</label>
+              <label :class="labelClass">Postcode *</label>
               <input 
                 v-model="artist.postcode"
                 type="text"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="Postcode"
               />
             </div>
@@ -228,7 +228,7 @@
         <button
           v-if="formData.artists.length < 5"
           @click="addArtist"
-          class="w-full py-3 border-2 border-dashed border-gray-300 rounded-xl text-sm font-medium text-gray-500 hover:border-ditto-purple hover:text-ditto-purple transition-colors flex items-center justify-center gap-2"
+          :class="['w-full py-3 border-2 border-dashed rounded-xl text-sm font-medium hover:border-ditto-purple hover:text-ditto-purple transition-colors flex items-center justify-center gap-2', isDarkMode ? 'border-gray-600 text-gray-400' : 'border-gray-300 text-gray-500']"
         >
           <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
@@ -239,82 +239,82 @@
 
       <!-- Step 3: Contract Terms -->
       <div v-if="currentStep === 2" class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Contract Terms</h2>
+        <h2 :class="['text-xl font-semibold mb-4', isDarkMode ? 'text-white' : 'text-gray-900']">Contract Terms</h2>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Effective Date *</label>
+            <label :class="labelClass">Effective Date *</label>
             <input 
               v-model="formData.terms.effectiveDate"
               type="date"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Term (Duration) *</label>
+            <label :class="labelClass">Term (Duration) *</label>
             <input 
               v-model="formData.terms.term"
               type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
               placeholder="e.g. 2 years"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Service Start Date *</label>
+            <label :class="labelClass">Service Start Date *</label>
             <input 
               v-model="formData.terms.serviceStartDate"
               type="date"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Service End Date *</label>
+            <label :class="labelClass">Service End Date *</label>
             <input 
               v-model="formData.terms.serviceEndDate"
               type="date"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Number of Full-Length Albums</label>
+            <label :class="labelClass">Number of Full-Length Albums</label>
             <input 
               v-model="formData.terms.albumCount"
               type="number"
               min="1"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
               placeholder="1"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Payment Structure *</label>
+            <label :class="labelClass">Payment Structure *</label>
             <input 
               v-model="formData.terms.paymentStructure"
               type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
               placeholder="e.g. 50/50 split"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Cure Period (Days)</label>
+            <label :class="labelClass">Cure Period (Days)</label>
             <input 
               v-model="formData.terms.curePeriod"
               type="text"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+              :class="inputClass"
               placeholder="e.g. 30 days"
             />
           </div>
           
           <div>
-            <label class="block text-xs text-gray-500 mb-1">Governing Law *</label>
+            <label :class="labelClass">Governing Law *</label>
             <select 
               v-model="formData.terms.governingLaw"
-              class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors bg-transparent"
+              :class="[inputClass, 'bg-transparent']"
             >
               <option value="">Select jurisdiction</option>
               <option value="england-wales">England and Wales</option>
@@ -328,60 +328,60 @@
 
       <!-- Step 4: Review & Sign -->
       <div v-if="currentStep === 3" class="space-y-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4">Review & Sign</h2>
+        <h2 :class="['text-xl font-semibold mb-4', isDarkMode ? 'text-white' : 'text-gray-900']">Review & Sign</h2>
         
         <!-- Summary -->
-        <div class="bg-gray-50 rounded-lg p-4 space-y-4">
-          <h3 class="font-medium text-gray-900">Contract Summary</h3>
+        <div :class="['rounded-lg p-4 space-y-4', isDarkMode ? 'bg-[#0F0E0E]' : 'bg-gray-50']">
+          <h3 :class="['font-medium', isDarkMode ? 'text-white' : 'text-gray-900']">Contract Summary</h3>
           
           <div class="grid grid-cols-2 gap-4 text-sm">
             <div>
-              <p class="text-gray-500">Record Label</p>
-              <p class="font-medium text-gray-900">{{ formData.recordLabel.name || '—' }}</p>
+              <p :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">Record Label</p>
+              <p :class="['font-medium', isDarkMode ? 'text-white' : 'text-gray-900']">{{ formData.recordLabel.name || '—' }}</p>
             </div>
             <div>
-              <p class="text-gray-500">Artist(s)</p>
-              <p class="font-medium text-gray-900">{{ artistNames || '—' }}</p>
+              <p :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">Artist(s)</p>
+              <p :class="['font-medium', isDarkMode ? 'text-white' : 'text-gray-900']">{{ artistNames || '—' }}</p>
             </div>
             <div>
-              <p class="text-gray-500">Effective Date</p>
-              <p class="font-medium text-gray-900">{{ formData.terms.effectiveDate || '—' }}</p>
+              <p :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">Effective Date</p>
+              <p :class="['font-medium', isDarkMode ? 'text-white' : 'text-gray-900']">{{ formData.terms.effectiveDate || '—' }}</p>
             </div>
             <div>
-              <p class="text-gray-500">Term</p>
-              <p class="font-medium text-gray-900">{{ formData.terms.term || '—' }}</p>
+              <p :class="isDarkMode ? 'text-gray-400' : 'text-gray-500'">Term</p>
+              <p :class="['font-medium', isDarkMode ? 'text-white' : 'text-gray-900']">{{ formData.terms.term || '—' }}</p>
             </div>
           </div>
         </div>
         
         <!-- Record Label Signature -->
         <div>
-          <h3 class="font-medium text-gray-900 mb-3">Record Label Signature</h3>
+          <h3 :class="['font-medium mb-3', isDarkMode ? 'text-white' : 'text-gray-900']">Record Label Signature</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-xs text-gray-500 mb-1">Signatory Name *</label>
+              <label :class="labelClass">Signatory Name *</label>
               <input 
                 v-model="formData.signatures.labelSignatory"
                 type="text"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="Full name"
               />
             </div>
             <div>
-              <label class="block text-xs text-gray-500 mb-1">Title *</label>
+              <label :class="labelClass">Title *</label>
               <input 
                 v-model="formData.signatures.labelTitle"
                 type="text"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="e.g. CEO, Manager"
               />
             </div>
             <div>
-              <label class="block text-xs text-gray-500 mb-1">Email *</label>
+              <label :class="labelClass">Email *</label>
               <input 
                 v-model="formData.signatures.labelEmail"
                 type="email"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="signatory@label.com"
               />
             </div>
@@ -390,32 +390,32 @@
         
         <!-- Artist Signature -->
         <div>
-          <h3 class="font-medium text-gray-900 mb-3">Artist / Band Signature</h3>
+          <h3 :class="['font-medium mb-3', isDarkMode ? 'text-white' : 'text-gray-900']">Artist / Band Signature</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label class="block text-xs text-gray-500 mb-1">Signatory Name *</label>
+              <label :class="labelClass">Signatory Name *</label>
               <input 
                 v-model="formData.signatures.artistSignatory"
                 type="text"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="Full name"
               />
             </div>
             <div>
-              <label class="block text-xs text-gray-500 mb-1">Title *</label>
+              <label :class="labelClass">Title *</label>
               <input 
                 v-model="formData.signatures.artistTitle"
                 type="text"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="e.g. Artist"
               />
             </div>
             <div>
-              <label class="block text-xs text-gray-500 mb-1">Email *</label>
+              <label :class="labelClass">Email *</label>
               <input 
                 v-model="formData.signatures.artistEmail"
                 type="email"
-                class="w-full py-2 text-sm text-gray-900 border-b border-gray-200 focus:border-ditto-purple focus:outline-none transition-colors"
+                :class="inputClass"
                 placeholder="artist@email.com"
               />
             </div>
@@ -427,9 +427,9 @@
           <input 
             v-model="agreedToTerms"
             type="checkbox"
-            class="mt-1 w-4 h-4 rounded border-gray-300 text-ditto-purple focus:ring-ditto-purple"
+            :class="['mt-1 w-4 h-4 rounded text-ditto-purple focus:ring-ditto-purple', isDarkMode ? 'border-gray-600 bg-[#0F0E0E]' : 'border-gray-300']"
           />
-          <span class="text-sm text-gray-600">
+          <span :class="['text-sm', isDarkMode ? 'text-gray-400' : 'text-gray-600']">
             I confirm that all information provided is accurate and I agree to the terms of this contract. 
             The contract will be sent to all signatories for electronic signature.
           </span>
@@ -441,7 +441,7 @@
     <div class="flex items-center justify-center gap-4 pt-6">
       <button 
         @click="currentStep > 0 ? previousStep() : $emit('back')"
-        class="px-8 py-2.5 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors border border-gray-300 rounded-full"
+        :class="['px-8 py-2.5 text-sm font-medium transition-colors border rounded-full', isDarkMode ? 'text-gray-400 hover:text-white border-gray-600' : 'text-gray-600 hover:text-gray-900 border-gray-300']"
       >
         Back
       </button>
@@ -479,7 +479,19 @@ import type { AvailableContract, Artist } from '../types'
 const props = defineProps<{
   contract: AvailableContract
   artist?: Artist
+  isDarkMode?: boolean
 }>()
+
+// Computed classes for dark mode support
+const labelClass = computed(() => [
+  'block text-xs mb-1',
+  props.isDarkMode ? 'text-gray-400' : 'text-gray-500'
+])
+
+const inputClass = computed(() => [
+  'w-full py-2 text-sm border-b focus:border-ditto-purple focus:outline-none transition-colors',
+  props.isDarkMode ? 'text-white border-gray-700 bg-transparent placeholder-gray-500' : 'text-gray-900 border-gray-200'
+])
 
 const emit = defineEmits<{
   (e: 'back'): void

@@ -20,7 +20,7 @@
     
     <!-- Available Contracts -->
     <section>
-      <h2 class="text-xl font-semibold text-gray-900 mb-4">Available Contracts</h2>
+      <h2 :class="['text-xl font-semibold mb-4', isDarkMode ? 'text-white' : 'text-gray-900']">Available Contracts</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <ContractTypeCard 
           v-for="contract in availableContracts" 
@@ -34,11 +34,11 @@
     
     <!-- Your Contracts -->
     <section>
-      <h2 class="text-xl font-semibold text-gray-900 mb-4">Your Contracts</h2>
+      <h2 :class="['text-xl font-semibold mb-4', isDarkMode ? 'text-white' : 'text-gray-900']">Your Contracts</h2>
       
-      <div class="bg-white rounded-xl overflow-hidden">
+      <div :class="['rounded-xl overflow-hidden', isDarkMode ? 'bg-[#141414]' : 'bg-white']">
         <!-- Table Header -->
-        <div class="hidden lg:grid grid-cols-12 gap-4 px-6 py-3 bg-gray-50 text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <div :class="['hidden lg:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-medium uppercase tracking-wider', isDarkMode ? 'bg-[#0F0E0E] text-gray-500' : 'bg-gray-50 text-gray-500']">
           <div class="col-span-5">Name</div>
           <div class="col-span-2">Status</div>
           <div class="col-span-3">Date Created</div>
@@ -46,15 +46,15 @@
         </div>
         
         <!-- Table Body -->
-        <div class="divide-y divide-gray-100">
+        <div :class="['divide-y', isDarkMode ? 'divide-gray-700/30' : 'divide-gray-100']">
           <div 
             v-for="contract in userContracts" 
             :key="contract.id"
-            class="grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-4 px-4 lg:px-6 py-4 hover:bg-gray-50 transition-colors"
+            :class="['grid grid-cols-1 lg:grid-cols-12 gap-2 lg:gap-4 px-4 lg:px-6 py-4 transition-colors', isDarkMode ? 'hover:bg-[#0F0E0E]/50' : 'hover:bg-gray-50']"
           >
             <!-- Name -->
             <div class="lg:col-span-5 flex items-center">
-              <span class="font-medium text-gray-900">{{ contract.name }}</span>
+              <span :class="['font-medium', isDarkMode ? 'text-white' : 'text-gray-900']">{{ contract.name }}</span>
             </div>
             
             <!-- Status -->
@@ -71,7 +71,7 @@
             
             <!-- Date Created -->
             <div class="lg:col-span-3 flex items-center">
-              <span class="text-sm text-gray-500">{{ contract.dateCreated }}</span>
+              <span :class="['text-sm', isDarkMode ? 'text-gray-400' : 'text-gray-500']">{{ contract.dateCreated }}</span>
             </div>
             
             <!-- Actions Dropdown -->
@@ -79,7 +79,7 @@
               <div class="relative">
                 <button 
                   @click="toggleActionsMenu(contract.id)"
-                  class="flex items-center gap-2 px-3 py-1.5 border border-gray-300 rounded-full text-sm text-gray-600 hover:border-ditto-purple hover:text-ditto-purple transition-colors"
+                  :class="['flex items-center gap-2 px-3 py-1.5 border rounded-full text-sm transition-colors', isDarkMode ? 'border-gray-600 text-gray-300 hover:border-ditto-purple hover:text-ditto-purple' : 'border-gray-300 text-gray-600 hover:border-ditto-purple hover:text-ditto-purple']"
                 >
                   Actions
                   <IconChevronDown class="w-4 h-4" :class="{ 'rotate-180': openMenuId === contract.id }" />
@@ -88,12 +88,12 @@
                 <!-- Dropdown Menu -->
                 <div 
                   v-if="openMenuId === contract.id"
-                  class="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20 py-1"
+                  :class="['absolute right-0 top-full mt-1 w-48 border rounded-lg shadow-lg z-20 py-1', isDarkMode ? 'bg-[#1a1a1a] border-gray-700' : 'bg-white border-gray-200']"
                 >
                   <!-- View - for all statuses -->
                   <button
                     @click="handleView(contract)"
-                    class="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    :class="['w-full px-3 py-2 text-sm text-left flex items-center gap-2', isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50']"
                   >
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.64 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.64 0-8.573-3.007-9.963-7.178z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                     View
@@ -103,7 +103,7 @@
                   <button
                     v-if="contract.status === 'Draft'"
                     @click="handleEdit(contract)"
-                    class="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    :class="['w-full px-3 py-2 text-sm text-left flex items-center gap-2', isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50']"
                   >
                     <IconEdit class="w-4 h-4" />
                     Edit
@@ -113,7 +113,7 @@
                   <button
                     v-if="contract.status === 'Ready'"
                     @click="handleResend(contract)"
-                    class="w-full px-3 py-2 text-sm text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    :class="['w-full px-3 py-2 text-sm text-left flex items-center gap-2', isDarkMode ? 'text-gray-300 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-50']"
                   >
                     <IconMail class="w-4 h-4" />
                     Resend to Email
@@ -123,7 +123,7 @@
                   <button
                     v-if="contract.status === 'Draft'"
                     @click="handleDelete(contract)"
-                    class="w-full px-3 py-2 text-sm text-left text-error hover:bg-red-50 flex items-center gap-2"
+                    :class="['w-full px-3 py-2 text-sm text-left text-error flex items-center gap-2', isDarkMode ? 'hover:bg-red-900/30' : 'hover:bg-red-50']"
                   >
                     <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>
                     Delete
